@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="referrer" content="never">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>三国演义 - 有声书简单示例</title>
+    <link rel="stylesheet" href="./index.css">
+    <script src="./jquery.js"></script>
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="main" data-bookname="sanguoyanyi" data-sectionid="0">
+        <div class="player" data-play="0"></div>
+        <audio src="" id="audio" type="audio/wav" controls></audio>
+        <div class="title"></div>
+        <div class="contents"></div>
+    </div>
+    
+</body>
+<script>
+
+    function show(bookname, sectionid) {
+            $.get('./outputs/' + bookname + '/outputs.txt', function (data) {
+                var res = eval('(' + data + ')');
+                var section = res['lists'][sectionid]
+                $(".title").text(section['title']);
+                var html = "";
+                var plays = []
+                for (i = 0; i < section['sentences'].length; i++) {
+                    var sentence = section['sentences'][i]
+                    var item = '<span class="item item-' + sentence['id'] + '">' + sentence['sentence'] + '。</span>'
+                    html += item;
+                    plays.push(sentence['id'])
+                    if (sentence['end'] == 1) {
+                        html += '<p></p>';
+                    }
+                }
+                $(".title").text(section['title']);
+                $(".contents").html(html);
+                console.log(plays);
+                var curIndex = 0
+                var sentenceId = plays[curIndex]
+
+                music.src = './outputs/' + bookname + '/' + sectionid + '/' + sentenceId + '.wav';
+                // music.play();
+                $(".item").removeClass('cur')
+                $(".item-" + sentenceId).addClass('cur');
+                music.addEventListener('ended', function () {
+                    curIndex += 1
+                    if (plays.length <= curIndex + 1) {
+                        return false;
+                    }
+                    sentenceId = plays[curIndex]
+                    $(".item").removeClass('cur')
+                    $(".item-" + sentenceId).addClass('cur');
+                    music.src = './outputs/' + bookname + '/' + sectionid + '/' + sentenceId + '.wav';
+                    music.play();
+                }, false);
+
+            });
+        }
+        var music = document.getElementById("audio");
+        $(function(){
+            var bookname = $(".main").attr('data-bookname');
+            var sectionid = $(".main").attr('data-sectionid');
+            text = show(bookname, sectionid)
+            $(".player").click(function(){
+                if ($(".player").attr('data-play') == 0) {
+                    console.log('play')
+                    $(".player").addClass('pause')
+                    $(".player").attr('data-play', 1)
+                    music.play();
+                } else {
+                    console.log('pause')
+                    $(".player").removeClass('pause')
+                    $(".player").attr('data-play', 0)
+                    music.pause();
+                }
+            })
+        })
+
+
+</script>
+</html>
+
+

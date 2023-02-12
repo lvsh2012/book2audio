@@ -1,0 +1,40 @@
+html, body{
+    padding: 0px;
+    margin: 0px;
+}
+.main{
+    padding: 20px;
+}
+
+.title{
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.item.cur{
+    color: red;
+}
+
+.player{
+    width: 32px;
+    height: 32px;
+    background: url('play.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: fixed;
+    top: 50px;
+    right: 5px;
+}
+
+.pause {
+    width: 32px;
+    height: 32px;
+    background: url('pause.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#audio{
+    display: none;
+}
